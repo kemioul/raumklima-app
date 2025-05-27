@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Raumklima-Überwachung</title>
+  
+  <link rel="stylesheet" href="/style.css">
+
+</head>
+<body>
+  <h1>Raumklima-Daten</h1>
+
+  <h2>Neuen Messwert eintragen</h2>
+<form action="/temperatur" method="POST" style="margin-bottom: 20px;">
+  <label for="temperatur">Temperatur (°C):</label>
+  <input type="number" step="0.1" name="temperatur" required>
+  <button type="submit">Speichern</button>
+</form>
+
+<form action="/feuchtigkeit" method="POST">
+  <label for="feuchtigkeit">Feuchtigkeit (%):</label>
+  <input type="number" step="0.1" name="feuchtigkeit" required>
+  <button type="submit">Speichern</button>
+</form>
+
+  <h2>Temperaturen</h2>
+  <table>
+    <tr><th>ID</th><th>Wert (°C)</th><th>Zeit</th></tr>
+    <% temperaturDaten.forEach(item => { 
+         const klasse = item.wert > 26 ? 'hot' : 'normal'; %>
+      <tr class="<%= klasse %>">
+        <td><%= item.id %></td>
+        <td><%= item.wert %></td>
+        <td><%= new Date(item.createdAt).toLocaleString() %></td>
+      </tr>
+    <% }); %>
+  </table>
+
+  <h2>Feuchtigkeit</h2>
+  <table>
+    <tr><th>ID</th><th>Wert (%)</th><th>Zeit</th></tr>
+    <% feuchtigkeitsDaten.forEach(item => { %>
+      <tr>
+        <td><%= item.id %></td>
+        <td><%= item.wert %></td>
+        <td><%= new Date(item.createdAt).toLocaleString() %></td>
+      </tr>
+    <% }); %>
+  </table>
+
+  <div class="chart-container">
+    <h2>Grafik: Temperatur</h2>
+    <canvas id="temperaturChart" width="600" height="200"></canvas>
+  </div>
+
+  <div class="chart-container">
+    <h2>Grafik: Feuchtigkeit</h2>
+    <canvas id="feuchtigkeitChart" width="600" height="200"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const temperaturDaten = <%- JSON.stringify(temperaturDaten) %>;
+    const feuchtigkeitsDaten = <%- JSON.stringify(feuchtigkeitsDaten) %>;
+
+    const labelsTemperatur = temperaturDaten.map(d => new Date(d.createdAt).toLocaleTimeString());
+    const valuesTemperatur = temperaturDaten.map(d => d.wert);
+
+    const labelsFeuchtigkeit = feuchtigkeitsDaten.map(d => new Date(d.createdAt).toLocaleTimeString());
+    const valuesFeuchtigkeit = feuchtigkeitsDaten.map(d => d.wert);
+
+    new Chart(document.getElementById('temperaturChart'), {
+      type: 'line',
+      data: {
+        labels: labelsTemperatur,
+        datasets: [{
+          label: 'Temperatur (°C)',
+          data: valuesTemperatur,
+          borderColor: 'rgba(255,99,132,1)',
+          backgroundColor: 'rgba(255,99,132,0.2)',
+          fill: true
+        }]
+      }
+    });
+
+    new Chart(document.getElementById('feuchtigkeitChart'), {
+      type: 'line',
+      data: {
+        labels: labelsFeuchtigkeit,
+        datasets: [{
+          label: 'Feuchtigkeit (%)',
+          data: valuesFeuchtigkeit,
+          borderColor: 'rgba(54,162,235,1)',
+          backgroundColor: 'rgba(54,162,235,0.2)',
+          fill: true
+        }]
+      }
+    });
+  </script>
+</body>
+</html>
