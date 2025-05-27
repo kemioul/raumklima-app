@@ -2,30 +2,36 @@
 <html>
 <head>
   <title>Raumklima-Überwachung</title>
-  
   <link rel="stylesheet" href="/style.css">
-
 </head>
 <body>
+
   <h1>Raumklima-Daten</h1>
 
-  <h2>Neuen Messwert eintragen</h2>
-<form action="/temperatur" method="POST" style="margin-bottom: 20px;">
-  <label for="temperatur">Temperatur (°C):</label>
-  <input type="number" step="0.1" name="temperatur" required>
-  <button type="submit">Speichern</button>
-</form>
+  <div class="info-box">
+    <strong>Aktuelle Temperatur:</strong>
+    <%= temperaturDaten.length > 0 ? temperaturDaten[0].wert + ' °C' : '–' %><br>
+    <strong>Aktuelle Feuchtigkeit:</strong>
+    <%= feuchtigkeitsDaten.length > 0 ? feuchtigkeitsDaten[0].wert + ' %' : '–' %>
+  </div>
 
-<form action="/feuchtigkeit" method="POST">
-  <label for="feuchtigkeit">Feuchtigkeit (%):</label>
-  <input type="number" step="0.1" name="feuchtigkeit" required>
-  <button type="submit">Speichern</button>
-</form>
+  <h2>Neuen Messwert eintragen</h2>
+  <form action="/temperatur" method="POST" style="margin-bottom: 20px;">
+    <label for="temperatur">Temperatur (°C):</label>
+    <input type="number" step="0.1" name="temperatur" required>
+    <button type="submit">Speichern</button>
+  </form>
+
+  <form action="/feuchtigkeit" method="POST">
+    <label for="feuchtigkeit">Feuchtigkeit (%):</label>
+    <input type="number" step="0.1" name="feuchtigkeit" required>
+    <button type="submit">Speichern</button>
+  </form>
 
   <h2>Temperaturen</h2>
   <table>
     <tr><th>ID</th><th>Wert (°C)</th><th>Zeit</th></tr>
-    <% temperaturDaten.forEach(item => { 
+    <% temperaturDaten.forEach(item => {
          const klasse = item.wert > 26 ? 'hot' : 'normal'; %>
       <tr class="<%= klasse %>">
         <td><%= item.id %></td>
@@ -47,14 +53,16 @@
     <% }); %>
   </table>
 
-  <div class="chart-container">
-    <h2>Grafik: Temperatur</h2>
-    <canvas id="temperaturChart" width="600" height="200"></canvas>
-  </div>
-
-  <div class="chart-container">
-    <h2>Grafik: Feuchtigkeit</h2>
-    <canvas id="feuchtigkeitChart" width="600" height="200"></canvas>
+  <div class="chart-wrapper">
+    <div class="chart-container">
+      <h2>Grafik: Temperatur</h2>
+      <canvas id="temperaturChart"></canvas>
+    </div>
+  
+    <div class="chart-container">
+      <h2>Grafik: Feuchtigkeit</h2>
+      <canvas id="feuchtigkeitChart"></canvas>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
