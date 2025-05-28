@@ -32,6 +32,10 @@ th, td {
   background-color: #d4edda;
 }
 
+.humid {
+  background-color: #fff3cd;
+}
+
 .chart-wrapper {
   display: flex;
   justify-content: space-between;

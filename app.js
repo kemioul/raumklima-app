@@ -1,12 +1,13 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-app.use(express.static(path.join(__dirname, 'public')));
-const PORT = 3000;
 
 const { Temperatur, Feuchtigkeit, sequelize } = require('./models');
 const raumklimaRoute = require('./routes/raumklima');
 
+const PORT = 3000;
+
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -15,7 +16,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use('/raumklima', raumklimaRoute);
 
-// GET – API endpoint pre zobrazenie všetkých teplôt
 app.get('/temperatur', async (req, res) => {
   try {
     const daten = await Temperatur.findAll();
@@ -25,7 +25,6 @@ app.get('/temperatur', async (req, res) => {
   }
 });
 
-// POST – vytvorenie novej teploty
 app.post('/temperatur', async (req, res) => {
   const temperatur = parseFloat(req.body.temperatur);
   if (isNaN(temperatur)) {
@@ -41,12 +40,10 @@ app.post('/temperatur', async (req, res) => {
 
     res.json({ message: `Temperatur ${temperatur} gespeichert.` });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: 'Fehler beim Speichern der Temperatur.' });
   }
 });
 
-// GET – API endpoint pre zobrazenie všetkých vlhkostí
 app.get('/feuchtigkeit', async (req, res) => {
   try {
     const daten = await Feuchtigkeit.findAll();
@@ -56,7 +53,6 @@ app.get('/feuchtigkeit', async (req, res) => {
   }
 });
 
-// POST – vytvorenie novej vlhkosti
 app.post('/feuchtigkeit', async (req, res) => {
   const feuchtigkeit = parseFloat(req.body.feuchtigkeit);
   if (isNaN(feuchtigkeit)) {
@@ -72,7 +68,6 @@ app.post('/feuchtigkeit', async (req, res) => {
 
     res.json({ message: `Feuchtigkeit ${feuchtigkeit} gespeichert.` });
   } catch (err) {
-    console.error(err);
     res.status(500).json({ error: 'Fehler beim Speichern der Feuchtigkeit.' });
   }
 });

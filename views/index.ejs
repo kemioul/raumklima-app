@@ -44,8 +44,9 @@
   <h2>Feuchtigkeit</h2>
   <table>
     <tr><th>ID</th><th>Wert (%)</th><th>Zeit</th></tr>
-    <% feuchtigkeitsDaten.forEach(item => { %>
-      <tr>
+    <% feuchtigkeitsDaten.forEach(item => {
+         const klasse = item.wert > 70 ? 'humid' : 'normal'; %>
+      <tr class="<%= klasse %>">
         <td><%= item.id %></td>
         <td><%= item.wert %></td>
         <td><%= new Date(item.createdAt).toLocaleString() %></td>
@@ -70,10 +71,10 @@
     const temperaturDaten = <%- JSON.stringify(temperaturDaten) %>;
     const feuchtigkeitsDaten = <%- JSON.stringify(feuchtigkeitsDaten) %>;
 
-    const labelsTemperatur = temperaturDaten.map(d => new Date(d.createdAt).toLocaleTimeString());
+    const labelsTemperatur = temperaturDaten.map(d => new Date(d.createdAt).toLocaleString());
     const valuesTemperatur = temperaturDaten.map(d => d.wert);
 
-    const labelsFeuchtigkeit = feuchtigkeitsDaten.map(d => new Date(d.createdAt).toLocaleTimeString());
+    const labelsFeuchtigkeit = feuchtigkeitsDaten.map(d => new Date(d.createdAt).toLocaleString());
     const valuesFeuchtigkeit = feuchtigkeitsDaten.map(d => d.wert);
 
     new Chart(document.getElementById('temperaturChart'), {

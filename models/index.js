@@ -6,22 +6,21 @@ const sequelize = new Sequelize({
 });
 
 const Temperatur = sequelize.define('Temperatur', {
-    wert: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-  }, {
-    freezeTableName: true
-  });
-  
-  const Feuchtigkeit = sequelize.define('Feuchtigkeit', {
-    wert: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
-  }, {
-    freezeTableName: true
-  });
-  
+  wert: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+}, {
+  freezeTableName: true
+});
+
+const Feuchtigkeit = sequelize.define('Feuchtigkeit', {
+  wert: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+}, {
+  freezeTableName: true
+});
 
 module.exports = { sequelize, Temperatur, Feuchtigkeit };
